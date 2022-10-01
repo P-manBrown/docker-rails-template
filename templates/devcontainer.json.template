@@ -1,0 +1,27 @@
+{
+  "name": "${TPL_PROJECT_NAME}",
+ "dockerComposeFile": ["../compose.yml", "./compose.devcontainer.yml"],
+  "service": "api",
+  "workspaceFolder": "/${TPL_PROJECT_NAME}",
+  "postCreateCommand": "bash ./.devcontainer/postCreateCommand/*.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "castwide.solargraph",
+        "noku.rails-run-spec-vscode",
+        "sporto.rails-go-to-spec",
+        "KoichiSasada.vscode-rdbg",
+        "rangav.vscode-thunder-client"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "castwide.solargraph",
+        "editor.formatOnSave": true,
+        "solargraph.checkGemVersion": false,
+        "solargraph.diagnostics": true,
+        "solargraph.formatting": true
+      }
+    }
+  }
+}

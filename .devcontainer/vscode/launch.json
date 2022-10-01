@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "rdbg",
+      "name": "Debug current file with rdbg",
+      "request": "launch",
+      "script": "${file}",
+      "askParameters": false
+    },
+    {
+      "name": "Start Puma",
+      "type": "rdbg",
+      "request": "launch",
+      "command": "",
+      "script": "${workspaceFolder}/bin/bundle",
+      "args": ["exec", "pumactl", "start"]
+    }
+  ]
+}

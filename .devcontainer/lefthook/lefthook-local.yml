@@ -1,0 +1,14 @@
+pre-commit:
+  commands:
+    rubocop-correct:
+      run: bundle exec rubocop -A --force-exclusion {staged_files} || exit 0
+commit-msg:
+  commands:
+    git-lint:
+      run: bundle exec git-lint --hook {1}
+pre-push:
+  commands:
+    rubocop-check:
+      run: bundle exec rubocop --force-exclusion {files}
+    rspec:
+      run: bundle exec rspec {files}

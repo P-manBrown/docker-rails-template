@@ -1,0 +1,7 @@
+/.docker/api/secrets/*
+!/.docker/api/secrets/*.template
+
+*.env*
+!*.env.template
+
+/.devcontainer/devcontainer.json
