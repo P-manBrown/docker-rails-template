@@ -1,4 +1,4 @@
-set -eu
+set -eux
 
 function copy_and_ignore() {
 	file_path=$1

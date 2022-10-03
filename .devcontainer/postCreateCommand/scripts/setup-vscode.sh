@@ -1,4 +1,4 @@
-set -eu
+set -eux
 
 ignore_path=/.vscode/launch.json
 if ! cat ./.git/info/exclude | grep -q $ignore_path; then
