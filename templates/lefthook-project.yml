@@ -1,4 +1,5 @@
 pre-commit:
+  parallel: true
   commands:
     rubocop-correct:
       glob: "*.rb"
@@ -6,6 +7,11 @@ pre-commit:
         docker compose run --rm --no-deps api bash -c "
         bundle exec rubocop -A --force-exclusion {staged_files} || exit 0
         "
+    check-current-branch:
+      run: >-
+        git symbolic-ref --short HEAD | grep -Eqvx 'main|develop' && exit 0
+        || echo 'Do NOT commit to your current branch.' && git branch && exit 1
+      tags: branch
 commit-msg:
   commands:
     git-lint:
