@@ -1,0 +1,31 @@
+{
+  "name": "myapp-backend",
+  "dockerComposeFile": ["../compose.yml", "./compose.devcontainer.yml"],
+  "service": "api",
+  "workspaceFolder": "/myapp-backend",
+  "postCreateCommand": "bash ./.devcontainer/postCreateCommand/*.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "castwide.solargraph",
+        "noku.rails-run-spec-vscode",
+        "sporto.rails-go-to-spec",
+        "KoichiSasada.vscode-rdbg",
+        "rangav.vscode-thunder-client"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "castwide.solargraph",
+        "editor.formatOnSave": true,
+        "solargraph.checkGemVersion": false,
+        "solargraph.diagnostics": true,
+        "solargraph.formatting": true,
+        "git.branchProtection": [
+          "main",
+          "develop"
+        ]
+      }
+    }
+  }
+}

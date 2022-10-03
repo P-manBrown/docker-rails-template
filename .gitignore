@@ -3,5 +3,3 @@
 
 *.env*
 !*.env.template
-
-/.devcontainer/devcontainer.json
