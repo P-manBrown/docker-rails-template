@@ -4,7 +4,7 @@ FROM ruby:${RUBY_IMAGE_TAG}
 
 ARG PROJECT_NAME
 ARG RUBYGEMS_VERSION
-ARG USER_NAME=ruby
+ARG USER_NAME
 ENV TZ=Asia/Tokyo
 
 RUN adduser ${USER_NAME}
@@ -19,17 +19,12 @@ RUN --mount=type=secret,id=github-pkg-cred,required <<-EOF
 	chown -R ${USER_NAME} ${GEM_HOME}
 EOF
 
-RUN <<-EOF
-	set -eu
-	gem install solargraph-rails --pre
-	solargraph download-core
-	yard gems || exit 0
-EOF
-
 COPY --chmod=755 /.docker/api/entrypoint.sh /usr/bin/
 ENTRYPOINT ["entrypoint.sh"]
 
 USER ${USER_NAME}
 RUN mkdir -p /${PROJECT_NAME}/tmp/sockets
+
+EXPOSE 3000
 
 CMD ["bundle", "exec", "pumactl", "start"]

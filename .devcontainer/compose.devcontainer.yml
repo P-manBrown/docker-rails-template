@@ -3,10 +3,10 @@ services:
     build:
       dockerfile: ./.devcontainer/Dockerfile
     volumes:
-      - bashlog:/home/ruby/bashlog
-      - gh-config:/home/node/.config/gh
-      - vscode-extensions:/home/ruby/.vscode-server/extensions
-      - yard-gem-index:/home/ruby/.yard/gem_index
+      - bashlog:/home/${API_USER_NAME}/bashlog
+      - gh-config:/home/${API_USER_NAME}/.config/gh
+      - vscode-extensions:/home/${API_USER_NAME}/.vscode-server/extensions
+      - yard-gem-index:/home/${API_USER_NAME}/.yard/gem_index
     command: bash -c "while sleep 1000; do :; done"
 volumes:
   bashlog:

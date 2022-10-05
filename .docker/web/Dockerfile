@@ -2,12 +2,17 @@
 ARG NGINX_IMAGE_TAG
 FROM nginx:${NGINX_IMAGE_TAG}
 
+ARG USER_NAME=nginx
+ENV TZ=Asia/Tokyo
+
 RUN rm -f /etc/nginx/conf.d/*
 RUN <<-EOF
-	set -e
-	chown -R nginx /var/cache/nginx
-	chown -R nginx /var/run
+	set -u
+	chown -R ${USER_NAME} /var/cache/nginx
 EOF
-USER nginx
+
+USER ${USER_NAME}
+
+EXPOSE 80
 
 CMD ["/usr/sbin/nginx", "-g", "daemon off;", "-c", "/etc/nginx/nginx.conf"]

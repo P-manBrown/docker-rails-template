@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:8.0.30
+    image: mysql:${MYSQL_IMAGE_TAG:?}
     user: mysql
     command: >-
       mysqld
@@ -21,27 +21,32 @@ services:
     environment:
       - TZ=Asia/Tokyo
     env_file:
-      - ./.docker/db/environment/mysql-variables.env
+      - ${MYSQL_ENV_PATH:?}
     ports:
-      - ${DB_PORT:-3306}:3306
+      - ${DB_PORT:?}:3306
   api:
     build:
       context: .
       dockerfile: ./.docker/api/Dockerfile
       args:
-        - PROJECT_NAME=${COMPOSE_PROJECT_NAME}
-        - RUBY_IMAGE_TAG=3.1.2
-        - RUBYGEMS_VERSION=3.3.22
+        - PROJECT_NAME=${COMPOSE_PROJECT_NAME:?}
+        - RUBY_IMAGE_TAG=${RUBY_IMAGE_TAG:?}
+        - RUBYGEMS_VERSION=${RUBYGEMS_VERSION:?}
+        - USER_NAME=${API_USER_NAME:?}
       secrets:
         - github-pkg-cred
     restart: always
     volumes:
-      - .:/${COMPOSE_PROJECT_NAME}
+      - .:/${COMPOSE_PROJECT_NAME:?}
       - gem-home:/usr/local/bundle
-      - puma-socket:/${COMPOSE_PROJECT_NAME}/tmp/sockets
+      - puma-socket:${API_SOCKETS_PATH:?}
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
-      - XDG_CONFIG_DIRS=/${COMPOSE_PROJECT_NAME}
+      - XDG_CONFIG_DIRS=/${COMPOSE_PROJECT_NAME:?}
+    env_file:
+      - ${MYSQL_ENV_PATH:?}
+    ports:
+      - ${API_PORT:?}:3000
     depends_on:
       db:
         condition: service_healthy
@@ -49,15 +54,20 @@ services:
     build:
       context: ./.docker/web
       args:
-        - NGINX_IMAGE_TAG=1.22.0
+        - NGINX_IMAGE_TAG=${NGINX_IMAGE_TAG:?}
     restart: always
     volumes:
-      - puma-socket:/${COMPOSE_PROJECT_NAME}/tmp/sockets
+      - puma-socket:${API_SOCKETS_PATH:?}
       - type: bind
-        source: ./.docker/web/conf.d/myapp.conf
+        source: ./.docker/web/nginx/conf.d/myapp.conf
         target: /etc/nginx/conf.d/myapp.conf
+        read_only: true
+      - type: bind
+        source: ./.docker/web/nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
     ports:
-      - ${WEB_PORT:-80}:80
+      - ${WEB_PORT:?}:80
     depends_on:
       - api
 secrets:
