@@ -2,6 +2,6 @@
 
 set -e
 
-rm -f ./tmp/pids/server.pid
+rm -f /home/ruby/myapp-backend/tmp/pids/server.pid
 
 exec "$@"
