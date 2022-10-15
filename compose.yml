@@ -9,7 +9,7 @@ services:
       test: mysqladmin ping -h db -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}
       interval: 1s
       start_period: 50s
-    restart: always
+    restart: on-failure
     volumes:
       - mysql-datadir:/var/lib/mysql
       - type: bind
@@ -35,14 +35,14 @@ services:
         - USER_NAME=${API_USER_NAME:?}
       secrets:
         - github-pkg-cred
-    restart: always
+    restart: on-failure
     volumes:
-      - .:/${COMPOSE_PROJECT_NAME:?}
+      - .:${API_PROJECT_ROOT:?}
       - gem-home:/usr/local/bundle
       - puma-socket:${API_SOCKETS_PATH:?}
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
-      - XDG_CONFIG_DIRS=/${COMPOSE_PROJECT_NAME:?}
+      - XDG_CONFIG_DIRS=${API_PROJECT_ROOT:?}
     env_file:
       - ${MYSQL_ENV_PATH:?}
     ports:
@@ -55,7 +55,7 @@ services:
       context: ./.docker/web
       args:
         - NGINX_IMAGE_TAG=${NGINX_IMAGE_TAG:?}
-    restart: always
+    restart: on-failure
     volumes:
       - puma-socket:${API_SOCKETS_PATH:?}
       - type: bind

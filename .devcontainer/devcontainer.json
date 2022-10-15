@@ -2,8 +2,8 @@
   "name": "myapp-backend",
   "dockerComposeFile": ["../compose.yml", "./compose.devcontainer.yml"],
   "service": "api",
-  "workspaceFolder": "/myapp-backend",
-  "postCreateCommand": "bash ./.devcontainer/postCreateCommand/run-files.sh",
+  "workspaceFolder": "/home/ruby/myapp-backend",
+  "postCreateCommand": "bash ./.devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -20,11 +20,7 @@
         "editor.formatOnSave": true,
         "solargraph.checkGemVersion": false,
         "solargraph.diagnostics": true,
-        "solargraph.formatting": true,
-        "git.branchProtection": [
-          "main",
-          "develop"
-        ]
+        "solargraph.formatting": true
       }
     }
   }

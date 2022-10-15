@@ -2,7 +2,7 @@
   "name": "${TPL_PROJECT_NAME}",
  "dockerComposeFile": ["../compose.yml", "./compose.devcontainer.yml"],
   "service": "api",
-  "workspaceFolder": "/${TPL_PROJECT_NAME}",
+  "workspaceFolder": "/home/ruby/${TPL_PROJECT_NAME}",
   "postCreateCommand": "bash ./.devcontainer/postCreateCommand/*.sh",
   "customizations": {
     "vscode": {

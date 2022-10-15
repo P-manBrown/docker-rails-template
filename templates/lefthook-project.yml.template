@@ -9,8 +9,8 @@ pre-commit:
         "
     check-current-branch:
       run: >-
-        git symbolic-ref --short HEAD | grep -Eqvx 'main|develop' && exit 0
-        || echo 'Do NOT commit to your current branch.' && git branch && exit 1
+        git branch --show-current | tee /dev/tty | grep -Eqvx 'main|develop|^$'
+        || { echo 'ERROR: Do NOT commit to your current branch.' && exit 1 ;}
       tags: branch
 commit-msg:
   commands:
@@ -36,3 +36,9 @@ pre-push:
         docker compose run --rm --no-deps api bash -c "
         bundle exec rspec {files}
         "
+pre-merge:
+  commands:
+    cleanup-branches:
+      run: >-
+        git branch --merged | grep -Ev '^\*|main|develop' | xargs git branch -d
+        && git remote prune origin
