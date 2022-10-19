@@ -3,7 +3,7 @@
  "dockerComposeFile": ["../compose.yml", "./compose.devcontainer.yml"],
   "service": "api",
   "workspaceFolder": "/home/ruby/${TPL_PROJECT_NAME}",
-  "postCreateCommand": "bash ./.devcontainer/postCreateCommand/*.sh",
+  "postCreateCommand": "bash ./.devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
