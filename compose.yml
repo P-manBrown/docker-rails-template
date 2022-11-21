@@ -2,7 +2,7 @@ services:
   db:
     image: mysql:${MYSQL_IMAGE_TAG:?}
     user: mysql
-    command: >-
+    command: >
       mysqld
       & chmod 555 /docker-entrypoint-initdb.d/00_create-test-db.sh
     healthcheck:

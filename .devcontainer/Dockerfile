@@ -58,7 +58,7 @@ RUN gh config set editor "code -w"
 
 RUN <<-EOF
 	set -eux
-	gem install solargraph-rails --pre
+	gem install solargraph-rails
 	solargraph download-core
 	mkdir -p /home/${USER_NAME}/.yard/gem_index
 EOF
@@ -88,5 +88,7 @@ RUN <<-EOF
 EOF
 
 RUN mkdir -p /home/${USER_NAME}/.vscode-server/extensions
+
+EXPOSE 3000
 
 CMD ["bundle", "exec", "pumactl", "start"]

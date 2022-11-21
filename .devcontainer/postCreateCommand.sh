@@ -6,7 +6,7 @@ GITHUB_PKG_CRED=$(cat "$GITHUB_PKG_CRED_PATH")
 bundle config https://rubygems.pkg.github.com/P-manBrown "$GITHUB_PKG_CRED"
 
 # setup GitHub CLI
-GITHUB_PAT=$(cut -f 2 -d ':' "$GITHUB_PKG_CRED_PATH" )
+GITHUB_PAT=$(cut -f 2 -d ':' "$GITHUB_PKG_CRED_PATH")
 echo "$GITHUB_PAT" | gh auth login --with-token
 
 copy_and_ignore() {
@@ -17,7 +17,7 @@ copy_and_ignore() {
 		echo "$target_dir/$file_name" \
 		| sed -e "s:^./:/:; /^[^/]/s:^:/:; /\/\//s:^//:/:"
 	)
-	if ! cat ./.git/info/exclude | grep -qx "$ignore_path"; then
+	if ! grep -qx "$ignore_path" ./.git/info/exclude | ; then
 		echo "$ignore_path" >> ./.git/info/exclude
 	fi
 	cp --update "$source_file" "$target_dir"
