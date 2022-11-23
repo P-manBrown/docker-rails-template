@@ -34,6 +34,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	make prefix=/usr/local install
 EOF
 
+RUN gem update --system ${RUBYGEMS_VERSION}
+
 COPY --chmod=755 /.docker/api/entrypoint.sh /usr/bin/
 ENTRYPOINT ["entrypoint.sh"]
 
@@ -43,15 +45,13 @@ USER ${USER_NAME}
 
 WORKDIR /home/${USER_NAME}/${PROJECT_NAME}
 COPY --chown=${USER_NAME} Gemfile* /home/${USER_NAME}/${PROJECT_NAME}/
-RUN --mount=type=secret,uid=1000,id=github-pkg-cred,required \
+RUN --mount=type=secret,uid=1000,id=github-credentials,required \
 --mount=type=cache,uid=1000,target=/home/${USER_NAME}/.cache/bundle <<-EOF
-	set -eux
-	gem update --system ${RUBYGEMS_VERSION}
-	export BUNDLE_RUBYGEMS__PKG__GITHUB__COM=$(cat /run/secrets/github-pkg-cred)
+	set -aeu
+	. /run/secrets/github-credentials
 	GEM_HOME=/home/${USER_NAME}/.cache/bundle bundle install
 	cp -aRT /home/${USER_NAME}/.cache/bundle ${GEM_HOME}
 EOF
-
 RUN mkdir -p /home/${USER_NAME}/${PROJECT_NAME}/tmp/sockets
 
 RUN gh config set editor "code -w"

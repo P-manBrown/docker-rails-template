@@ -34,7 +34,7 @@ services:
         - RUBYGEMS_VERSION=${RUBYGEMS_VERSION:?}
         - USER_NAME=${API_USER_NAME:?}
       secrets:
-        - github-pkg-cred
+        - github-credentials
     restart: on-failure
     volumes:
       - .:${API_PROJECT_ROOT:?}
@@ -45,6 +45,7 @@ services:
       - XDG_CONFIG_DIRS=${API_PROJECT_ROOT:?}
     env_file:
       - ${MYSQL_ENV_PATH:?}
+      - ./.docker/api/environment/github-credentials.env
     ports:
       - ${API_PORT:?}:3000
     depends_on:
@@ -71,8 +72,8 @@ services:
     depends_on:
       - api
 secrets:
-  github-pkg-cred:
-    file: ./.docker/api/secrets/github-pkg-cred.txt
+  github-credentials:
+    file: ./.docker/api/environment/github-credentials.env
 volumes:
   mysql-datadir:
   gem-home:

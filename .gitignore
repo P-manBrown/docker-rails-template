@@ -1,4 +1,0 @@
-/.docker/api/secrets/*
-!/.docker/api/secrets/*.template
-/.docker/db/environment/*
-!/.docker/db/environment/*.template

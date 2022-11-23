@@ -1,4 +1,2 @@
-/.docker/db/environment
-/.docker/api/secrets
-*.env*
+/.docker/*/environment
 /config/master.key

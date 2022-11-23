@@ -7,6 +7,8 @@ services:
       - gh-config:/home/${API_USER_NAME}/.config/gh
       - vscode-extensions:/home/${API_USER_NAME}/.vscode-server/extensions
       - yard-gem-index:/home/${API_USER_NAME}/.yard/gem_index
+    env_file:
+      - ./.docker/api/environment/github-credentials.env
     command: bash -c "while sleep 1000; do :; done"
 volumes:
   bashlog:
