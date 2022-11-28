@@ -1,0 +1,3 @@
+    protect-branch:
+      run: git branch --show-current | tee /dev/tty | grep -Eqvx 'main|develop'
+      fail_text: "ERROR: Do Not commit directly to 'main' or 'develop' branch."

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e
-
-rm -f /home/ruby/${TPL_PROJECT_NAME}/tmp/pids/server.pid
-
-exec "${DOLLAR}@"
