@@ -23,7 +23,15 @@
         "editor.formatOnSave": true,
         "solargraph.checkGemVersion": false,
         "solargraph.diagnostics": true,
-        "solargraph.formatting": true
+        "solargraph.formatting": true,
+        "markdown.extension.toc.levels": "2..6",
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.fixAll.markdownlint": true
+          }
+        }
       }
     }
   }
