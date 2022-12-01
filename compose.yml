@@ -1,79 +1,62 @@
+x-mysql_env_path: &mysql_env_path
+  ./Docker/db/environment/mysql.env
+x-puma-socket-volume: &puma-socket-volume
+  puma-socket:/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}/tmp/sockets
+x-github-credentials-path: &github-credentials-path
+  ./Docker/api/environment/github-credentials.env
+
 services:
   db:
-    image: mysql:${MYSQL_IMAGE_TAG:?}
-    user: mysql
-    command: >
-      mysqld
-      & chmod 555 /docker-entrypoint-initdb.d/00_create-test-db.sh
+    build:
+      context: ./Docker/db
     healthcheck:
       test: mysqladmin ping -h db -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}
       interval: 1s
-      start_period: 50s
+      start_period: 60s
     restart: on-failure
     volumes:
       - mysql-datadir:/var/lib/mysql
-      - type: bind
-        source: ./.docker/db/conf.d/docker.cnf
-        target: /etc/mysql/conf.d/docker.cnf
-      - type: bind
-        source: ./.docker/db/initdb.d
-        target: /docker-entrypoint-initdb.d
-    environment:
-      - TZ=Asia/Tokyo
-    env_file:
-      - ${MYSQL_ENV_PATH:?}
+    env_file: *mysql_env_path
     ports:
-      - ${DB_PORT:?}:3306
+      - ${DB_PORT:-3306}:3306
   api:
     build:
       context: .
-      dockerfile: ./.docker/api/Dockerfile
+      dockerfile: ./Docker/api/Dockerfile
       args:
         - PROJECT_NAME=${COMPOSE_PROJECT_NAME:?}
-        - RUBY_IMAGE_TAG=${RUBY_IMAGE_TAG:?}
-        - RUBYGEMS_VERSION=${RUBYGEMS_VERSION:?}
         - USER_NAME=${API_USER_NAME:?}
       secrets:
         - github-credentials
     restart: on-failure
     volumes:
-      - .:${API_PROJECT_ROOT:?}
+      - .:/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}
       - gem-home:/usr/local/bundle
-      - puma-socket:${API_SOCKETS_PATH:?}
+      - *puma-socket-volume
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
-      - XDG_CONFIG_DIRS=${API_PROJECT_ROOT:?}
+      - XDG_CONFIG_DIRS=/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}
     env_file:
-      - ${MYSQL_ENV_PATH:?}
-      - ./.docker/api/environment/github-credentials.env
+      - *mysql_env_path
+      - *github-credentials-path
     ports:
-      - ${API_PORT:?}:3000
+      - ${API_PORT:-3001}:3000
     depends_on:
       db:
         condition: service_healthy
   web:
     build:
-      context: ./.docker/web
-      args:
-        - NGINX_IMAGE_TAG=${NGINX_IMAGE_TAG:?}
+      context: ./Docker/web
     restart: on-failure
     volumes:
-      - puma-socket:${API_SOCKETS_PATH:?}
-      - type: bind
-        source: ./.docker/web/nginx/conf.d/myapp.conf
-        target: /etc/nginx/conf.d/myapp.conf
-        read_only: true
-      - type: bind
-        source: ./.docker/web/nginx/nginx.conf
-        target: /etc/nginx/nginx.conf
-        read_only: true
+      - *puma-socket-volume
     ports:
-      - ${WEB_PORT:?}:80
+      - ${WEB_PORT:-80}:80
     depends_on:
       - api
 secrets:
   github-credentials:
-    file: ./.docker/api/environment/github-credentials.env
+    file: *github-credentials-path
 volumes:
   mysql-datadir:
   gem-home:

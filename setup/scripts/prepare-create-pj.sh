@@ -5,7 +5,7 @@ err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
 }
 
-if [ -e /.dockerenv ]; then
+if [[ -e /.dockerenv ]]; then
 	err 'This file must be run on the host.'
 	exit 1
 fi
@@ -15,7 +15,7 @@ if ! git branch | grep -q 'main' ; then
 	exit 1
 fi
 
-if [ -z "${PROJECT_NAME}" ]; then
+if [[ -z "${PROJECT_NAME}" ]]; then
 	echo -n 'What is your project named? > '
 	read PROJECT_NAME
 fi
@@ -66,7 +66,7 @@ git config --local commit.template ./.github/commit/gitmessage.txt
 
 # Reflect project name
 echo "Reflecting your project name(${PROJECT_NAME})..."
-grep -lr 'test-backend' | xargs sed -i '' "s/test-backend/${PROJECT_NAME}/g"
+grep -lr 'myapp-backend' | xargs sed -i '' "s/myapp-backend/${PROJECT_NAME}/g"
 
 # Create secret file
 echo 'Copying template files...'
@@ -83,4 +83,4 @@ EOF
 
 echo 'Done!!'
 
-rm -f ./setup/scripts/prepare-create-pj.sh
+rm ./setup/scripts/prepare-create-pj.sh

@@ -5,12 +5,13 @@ err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
 }
 
-if [ ! -e /.dockerenv ]; then
+if [[ ! -e /.dockerenv ]]; then
 	err 'This file must be run inside the container.'
 	exit 1
 fi
 
 SETTINGS_DIR='./setup/settings'
+PROJECT_NAME="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
 
 # creating project
 echo 'Creating your project...'
@@ -19,7 +20,7 @@ rails new . --force --database=mysql --api
 # installing gems
 echo 'Installing gems...'
 cp ./Gemfile /tmp/Gemfile
-trap "rm -f /tmp/Gemfile" EXIT
+trap "find /tmp -maxdepth 1 -type f | xargs rm" EXIT
 ## dotenv
 bundle add dotenv-rails \
 	--group 'development, test' \
@@ -52,7 +53,7 @@ bundle add rack-cors \
 ## RSpec
 bundle add rspec-rails \
 	--version '~> 6.0.0' \
-	--group 'development, test'\
+	--group 'development, test' \
 	--skip-install
 ## Rubocop
 bundle add rubocop rubocop-performance rubocop-rails rubocop-rspec \
@@ -95,30 +96,45 @@ bundle install
 
 # setting up project
 echo 'Setting up your project...'
+## setting up RSpec
+rails generate rspec:install
+## setting up time zone
+cp ./config/application.rb /tmp/application.rb
+rails_time_zone='config.time_zone = "Tokyo"'
+sed -i "s/# config.time_zone.*/${rails_time_zone}/" /tmp/application.rb
+sed -r '/^(\s{2})?#/d;' /tmp/Gemfile | cat -s > ./config/application.rb
 ## mv setting files
 mv -f ${SETTINGS_DIR}/database.yml ./config/database.yml
 mv -f ${SETTINGS_DIR}/puma.rb ./config/puma.rb
-project_name="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
-if [[ "${project_name}" =~ 'backend' ]]; then
-	cp -f ./lefthook.yml /tmp/lefthook.yml
-	sed \
-		'/^commit-msg:$/e < ${SETTINGS_DIR}/lefthook/protect-branch.txt' \
+if [[ "${PROJECT_NAME}" =~ 'backend' ]]; then
+	cp ./lefthook.yml /tmp/lefthook.yml
+	sed -i \
+		"/^commit-msg:$/e < ${SETTINGS_DIR}/lefthook/protect-branch.txt" \
 		/tmp/lefthook.yml
 	mv -f /tmp/lefthook.yml ./lefthook.yml
 	cat ${SETTINGS_DIR}/lefthook/cleanup-branches.txt >> lefthook.yml
-	cp -f ./.github/dependabot.yml /tmp/dependabot.yml
+	cp ./.github/dependabot.yml /tmp/dependabot.yml
 	sed -i 's/main/develop/' /tmp/dependabot.yml
 	mv -f /tmp/dependabot.yml ./.github/dependabot.yml
 	cat ${SETTINGS_DIR}/dependabot-bundler.txt >> ./.github/dependabot.yml
 fi
 rm -rf ${SETTINGS_DIR}
 
-# add gitignore patterns
+# adding gitignore patterns
 cat <<-EOF >> ./.git/info/exclude
 	/.vscode/setting.json
 	/html_from_md
 	.DS_Store
 EOF
+
+# If there are any changes in the main branch, move it to the develop branch.
+current_branch="$(git branch --show-current)"
+if [[ "${PROJECT_NAME}" =~ 'backend']] \
+	&& [[ "${current_branch}" == 'main' ]]; then
+		git stash push -q -u
+		git checkout develop
+		git stash pop -q
+fi
 
 echo 'Done!!'
 
