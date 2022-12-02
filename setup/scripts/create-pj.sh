@@ -127,15 +127,6 @@ cat <<-EOF >> ./.git/info/exclude
 	.DS_Store
 EOF
 
-# If there are any changes in the main branch, move it to the develop branch.
-current_branch="$(git branch --show-current)"
-if [[ "${PROJECT_NAME}" =~ 'backend']] \
-	&& [[ "${current_branch}" == 'main' ]]; then
-		git stash push -q -u
-		git checkout develop
-		git stash pop -q
-fi
+rm ./setup/scripts/create-pj.sh
 
 echo 'Done!!'
-
-rm -rf ./setup

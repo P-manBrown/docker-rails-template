@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
@@ -10,65 +10,36 @@ if [[ -e /.dockerenv ]]; then
 	exit 1
 fi
 
-if ! git branch | grep -q 'main' ; then
+if ! git branch | grep -q 'main'; then
 	err "Change the default branch to 'main'."
 	exit 1
 fi
 
-if [[ -z "${PROJECT_NAME}" ]]; then
-	echo -n 'What is your project named? > '
-	read PROJECT_NAME
-fi
-
-set -u
-
 # Setting up Git/GitHub
-GH_USER="$(git config user.name)"
-REPO_NAME="$(basename -s .git $(git remote get-url origin))"
-if [[ "${PROJECT_NAME}" =~ 'backend' ]]; then
+git update-ref -d HEAD
+github_user="$(git config user.name)"
 echo 'Setting up GitHub...'
-## checkout develop branch
-	git checkout -b develop
-## Protect main and develop branch
-	repositoryId="$(
-		gh api graphql \
-			-f query='{repository(owner:"'${GH_USER}'",name:"'${REPO_NAME}'"){id}}' \
-			-q .data.repository.id
-	)"
-	branches=(main develop)
-	for branch in "${branches[@]}"
-	do
-		gh api graphql \
-			-f query='
-				mutation($repositoryId:ID!,$branch:String!,$requiredReviews:Int!) {
-					createBranchProtectionRule(input: {
-						repositoryId: $repositoryId
-						pattern: $branch
-						requiresApprovingReviews: true
-						requiredApprovingReviewCount: $requiredReviews
-						dismissesStaleReviews: true
-						isAdminEnforced: true
-					}) { clientMutationId }
-				}' \
-			-f repositoryId="${repositoryId}" \
-			-f branch="${branch}" \
-			-F requiredReviews=1
-	done
 ## enable to automatically delete head branches
-	gh repo edit ${GH_USER}/${REPO_NAME} --delete-branch-on-merge
-fi
+repo_name="$(basename -s .git $(git remote get-url origin))"
+gh repo edit ${github_user}/${repo_name} --delete-branch-on-merge
 echo 'Setting up Git...'
 ## enable to commit inside a container without 'Dev Containers'
-git config --local user.name "${GH_USER}"
+git config --local user.name "${github_user}"
 git config --local user.email "$(git config user.email)"
 # setting up 'commit message template'
 git config --local commit.template ./.github/commit/gitmessage.txt
 
 # Reflect project name
-echo "Reflecting your project name(${PROJECT_NAME})..."
-grep -lr 'myapp-backend' | xargs sed -i '' "s/myapp-backend/${PROJECT_NAME}/g"
+set +u
+if [[ -z "${project_name}" ]]; then
+	echo -n 'What is your project named? > '
+	read project_name
+fi
+set -u
+echo "Reflecting your project name(${project_name})..."
+grep -lr 'myapp-backend' | xargs sed -i '' "s/myapp-backend/${project_name}/g"
 
-# Create secret file
+# Copying template files
 echo 'Copying template files...'
 cd ./Docker/api/environment
 cp ./github-credentials.env.template ./github-credentials.env
@@ -81,6 +52,6 @@ Docker/api/environment/github-credentials.env
 Docker/db/environment/mysql.env
 EOF
 
-echo 'Done!!'
-
 rm ./setup/scripts/prepare-create-pj.sh
+
+echo 'Done!!'
