@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ruby:3.1.2
+FROM ruby:3.1.3
 
 ARG PROJECT_NAME
 ARG USER_NAME
