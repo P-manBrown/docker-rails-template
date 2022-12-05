@@ -1,7 +1,0 @@
-pre-merge:
-  commands:
-    cleanup-branches:
-      run: >-
-        git branch --merged | grep -Ev '^\*|main|develop' | xargs git branch -d
-        && git remote prune origin
-    fail_text: 'Read the error message above.'

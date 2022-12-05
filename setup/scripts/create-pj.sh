@@ -10,17 +10,21 @@ if [[ ! -e /.dockerenv ]]; then
 	exit 1
 fi
 
-SETTINGS_DIR='./setup/settings'
+CONFIG_DIR='./setup/config'
 PROJECT_NAME="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
 
 # creating project
 echo 'Creating your project...'
-rails new . --force --database=mysql --api
+rails new . --api --database=mysql --force --skip-test
+
+# adding file contents to the index
+echo 'Adding file contents to the index...'
+git add .
 
 # installing gems
 echo 'Installing gems...'
 cp ./Gemfile /tmp/Gemfile
-trap "find /tmp -maxdepth 1 -type f | xargs rm" EXIT
+trap "rm /tmp/Gemfile" EXIT
 ## dotenv
 bundle add dotenv-rails \
 	--group 'development, test' \
@@ -61,7 +65,7 @@ bundle add rubocop rubocop-performance rubocop-rails rubocop-rspec \
 	--require 'false' \
 	--skip-install
 ## my_git-lint
-sed -i "/group :development do/r ${SETTINGS_DIR}/gh-pkg-gem-decls" /tmp/Gemfile
+sed -i "/group :development do/r ${CONFIG_DIR}/gh-pkg-gem-decls" /tmp/Gemfile
 ## editing gem declarations in Gemfile
 added_gem_decls="$(
 	diff --old-line-format='' --unchanged-line-format='' /tmp/Gemfile ./Gemfile \
@@ -98,31 +102,21 @@ bundle install
 echo 'Setting up your project...'
 ## setting up RSpec
 rails generate rspec:install
-## setting up time zone
-cp ./config/application.rb /tmp/application.rb
-rails_time_zone='config.time_zone = "Tokyo"'
-sed -i "s/# config.time_zone.*/${rails_time_zone}/" /tmp/application.rb
-sed -r '/^(\s{2})?#/d;' /tmp/Gemfile | cat -s > ./config/application.rb
-## mv setting files
-mv -f ${SETTINGS_DIR}/database.yml ./config/database.yml
-mv -f ${SETTINGS_DIR}/puma.rb ./config/puma.rb
+## preparing configuration files
+app_time_zone='config.time_zone = "Tokyo"'
+sed -i "s/# config.time_zone.*/${app_time_zone}/" ./config/application.rb
+mv -f ${CONFIG_DIR}/database.yml ./config/database.yml
+mv -f ${CONFIG_DIR}/puma.rb ./config/puma.rb
 if [[ "${PROJECT_NAME}" =~ 'backend' ]]; then
-	cp ./lefthook.yml /tmp/lefthook.yml
-	sed -i \
-		"/^commit-msg:$/e < ${SETTINGS_DIR}/lefthook/protect-branch.txt" \
-		/tmp/lefthook.yml
-	mv -f /tmp/lefthook.yml ./lefthook.yml
-	cat ${SETTINGS_DIR}/lefthook/cleanup-branches.txt >> lefthook.yml
-	cp ./.github/dependabot.yml /tmp/dependabot.yml
-	sed -i 's/main/develop/' /tmp/dependabot.yml
-	mv -f /tmp/dependabot.yml ./.github/dependabot.yml
-	cat ${SETTINGS_DIR}/dependabot-bundler.txt >> ./.github/dependabot.yml
+	sed -i 's/main/develop/' ./.github/dependabot.yml
+else
+	sed -i '/protect-branch:$/,/fail_text:.*branch\."$/d' ./lefthook.yml
 fi
-rm -rf ${SETTINGS_DIR}
+rm -rf ${CONFIG_DIR}
 
 # adding gitignore patterns
 cat <<-EOF >> ./.git/info/exclude
-	/.vscode/setting.json
+	/.vscode/settings.json
 	/html_from_md
 	.DS_Store
 EOF

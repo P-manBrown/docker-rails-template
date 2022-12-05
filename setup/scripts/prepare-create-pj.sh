@@ -17,9 +17,9 @@ fi
 
 # Setting up Git/GitHub
 git update-ref -d HEAD
-github_user="$(git config user.name)"
 echo 'Setting up GitHub...'
 ## enable to automatically delete head branches
+github_user="$(git config user.name)"
 repo_name="$(basename -s .git $(git remote get-url origin))"
 gh repo edit ${github_user}/${repo_name} --delete-branch-on-merge
 echo 'Setting up Git...'
