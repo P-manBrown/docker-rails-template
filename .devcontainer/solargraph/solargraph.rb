@@ -1,6 +1,7 @@
 # rubocop:disable all
-# SolargraphがRailsに対応する上で不足している部分を補うためのコメント。
-# すべてYARDで書かれおりSolargraphではマップされるが実行時には無視される。
+# The following comments fill some of the gaps in Solargraph's understanding of
+# Rails apps. Since they're all in YARD, they get mapped in Solargraph but
+# ignored at runtime.
 
 # @!parse
 #   class ActionController::Base

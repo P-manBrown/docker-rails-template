@@ -5,7 +5,7 @@ err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
 }
 
-if [[ -e ./README.md]]; then
+if [[ -e ./README.md ]]; then
 	err 'Create ./README.md before running this file.'
 	exit 1
 fi
@@ -29,8 +29,8 @@ LEFTHOOK=0 git push origin develop
 project_name="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
 if [[ "${project_name}" =~ 'backend' ]]; then
 	echo 'Setting up protected branches...'
-	owner=$(git config user.name)
-	repo=$(basename -s .git $(git remote get-url origin))
+	owner="$(git config user.name)"
+	repo="$(basename -s .git "$(git remote get-url origin)")"
 	repositoryId="$(
 		gh api graphql \
 			-f query='{repository(owner:"'${owner}'",name:"'${repo}'"){id}}' \

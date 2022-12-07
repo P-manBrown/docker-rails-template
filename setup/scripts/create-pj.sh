@@ -72,18 +72,18 @@ added_gem_decls="$(
 		| sed /^$/d \
 		| tac
 )"
-if echo ${added_gem_decls} | grep -q ':group => :test'; then
+if echo "${added_gem_decls}" | grep -q ':group => :test'; then
 	cat <<-EOF >> /tmp/Gemfile
 		group :test do
 		end
 	EOF
 fi
-while read added_gem_decl; do
+while read -r added_gem_decl; do
 	decl_no_group="$(
 		echo "${added_gem_decl}" \
 			| sed -r 's/, :groups? => \[?:.*t]?//; s/:require =>/require:/'
 	)"
-	if [[ "${added_gem_decl}" =~ '[:development, :test]' ]]; then
+	if [[ "${added_gem_decl}" =~ ':development, :test' ]]; then
 		sed -i "/group :development, :test do/a \  ${decl_no_group}\n" /tmp/Gemfile
 	elif [[ "${added_gem_decl}" =~ ':development' ]]; then
 		sed -i "/group :development do/a \  ${decl_no_group}\n" /tmp/Gemfile
@@ -105,14 +105,14 @@ rails generate rspec:install
 ## preparing configuration files
 app_time_zone='config.time_zone = "Tokyo"'
 sed -i "s/# config.time_zone.*/${app_time_zone}/" ./config/application.rb
-mv -f ${CONFIG_DIR}/database.yml ./config/database.yml
-mv -f ${CONFIG_DIR}/puma.rb ./config/puma.rb
+mv -f "${CONFIG_DIR}/database.yml" ./config/database.yml
+mv -f "${CONFIG_DIR}/puma.rb" ./config/puma.rb
 if [[ "${PROJECT_NAME}" =~ 'backend' ]]; then
 	sed -i 's/main/develop/' ./.github/dependabot.yml
 else
 	sed -i '/protect-branch:$/,/fail_text:.*branch\."$/d' ./lefthook.yml
 fi
-rm -rf ${CONFIG_DIR}
+rm -rf "${CONFIG_DIR}"
 
 # adding gitignore patterns
 cat <<-EOF >> ./.git/info/exclude

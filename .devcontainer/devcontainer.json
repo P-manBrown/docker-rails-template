@@ -2,8 +2,19 @@
   "name": "myapp-backend",
   "dockerComposeFile": ["../compose.yml", "./compose.devcontainer.yml"],
   "service": "api",
+  "containerUser": "ruby",
   "workspaceFolder": "/home/ruby/myapp-backend",
   "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:1": {
+      "upgradePackages": false
+    },
+    "ghcr.io/P-manBrown/devcontainer-features/git-from-src-fast:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers/features/common-utils"
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -19,6 +30,7 @@
         "rangav.vscode-thunder-client"
       ],
       "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
         "editor.defaultFormatter": "castwide.solargraph",
         "editor.formatOnSave": true,
         "solargraph.checkGemVersion": false,

@@ -1,8 +1,8 @@
-x-mysql_env_path: &mysql_env_path
+x-mysql_env_path: &mysql-env-path
   ./Docker/db/environment/mysql.env
-x-puma-socket-volume: &puma-socket-volume
+x-puma_socket_volume: &puma-socket-volume
   puma-socket:/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}/tmp/sockets
-x-github-credentials-path: &github-credentials-path
+x-github_credentials_path: &github-credentials-path
   ./Docker/api/environment/github-credentials.env
 
 services:
@@ -16,7 +16,7 @@ services:
     restart: on-failure
     volumes:
       - mysql-datadir:/var/lib/mysql
-    env_file: *mysql_env_path
+    env_file: *mysql-env-path
     ports:
       - ${DB_PORT:-3306}:3306
   api:
@@ -37,7 +37,7 @@ services:
       - RAILS_ENV=${RAILS_ENV:-development}
       - XDG_CONFIG_DIRS=/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}
     env_file:
-      - *mysql_env_path
+      - *mysql-env-path
       - *github-credentials-path
     ports:
       - ${API_PORT:-3001}:3000

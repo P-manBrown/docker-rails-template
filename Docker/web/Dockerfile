@@ -1,16 +1,19 @@
+# syntax=docker/dockerfile:1
 FROM nginx:1.23.2
 
-ARG USER_NAME=nginx
-ENV TZ=Asia/Tokyo
+ARG USER_NAME='nginx'
+ENV TZ='Asia/Tokyo'
 
 RUN rm -f /etc/nginx/conf.d/*
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ./nginx/conf.d/myapp.conf /etc/nginx/conf.d/myapp.conf
-RUN chown -R ${USER_NAME} /etc/nginx
+COPY ./nginx/nginx.conf /etc/nginx/
+COPY ./nginx/conf.d/myapp.conf /etc/nginx/conf.d/
 
-RUN chown -R ${USER_NAME} /var/cache/nginx
-
-USER ${USER_NAME}
+RUN <<-EOF
+	set -e
+	chown -R "${USER_NAME}" /etc/nginx
+	chown -R "${USER_NAME}" /var/cache/nginx
+EOF
+USER "${USER_NAME}"
 
 EXPOSE 80
 

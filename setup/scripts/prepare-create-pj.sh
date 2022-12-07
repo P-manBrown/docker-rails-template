@@ -20,8 +20,8 @@ git update-ref -d HEAD
 echo 'Setting up GitHub...'
 ## enable to automatically delete head branches
 github_user="$(git config user.name)"
-repo_name="$(basename -s .git $(git remote get-url origin))"
-gh repo edit ${github_user}/${repo_name} --delete-branch-on-merge
+repo_name="$(basename -s .git "$(git remote get-url origin)")"
+gh repo edit "${github_user}/${repo_name}" --delete-branch-on-merge
 echo 'Setting up Git...'
 ## enable to commit inside a container without 'Dev Containers'
 git config --local user.name "${github_user}"
@@ -33,7 +33,7 @@ git config --local commit.template ./.github/commit/gitmessage.txt
 set +u
 if [[ -z "${project_name}" ]]; then
 	echo -n 'What is your project named? > '
-	read project_name
+	read -r project_name
 fi
 set -u
 echo "Reflecting your project name(${project_name})..."
