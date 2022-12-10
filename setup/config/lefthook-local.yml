@@ -1,0 +1,14 @@
+pre-commit:
+  commands:
+    rubocop:
+      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+    markdownlint:
+      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+commit-msg:
+  commands:
+    git-lint:
+      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+pre-push:
+  commands:
+    rspec:
+      run: docker compose run --rm --no-deps api sh -c "{cmd}"
