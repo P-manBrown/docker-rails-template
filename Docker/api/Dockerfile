@@ -13,12 +13,12 @@ RUN <<-EOF
 	adduser "${USER_NAME}"
 	chown -R "${USER_NAME}" "${GEM_HOME}"
 EOF
-USER "${USER_NAME}"
+USER ${USER_NAME}
 
-WORKDIR "/home/${USER_NAME}/${PROJECT_NAME}"
-COPY --chown="${USER_NAME}" ./Gemfile* "/home/${USER_NAME}/${PROJECT_NAME}/"
+WORKDIR /home/${USER_NAME}/${PROJECT_NAME}
+COPY --chown=${USER_NAME} ./Gemfile* /home/${USER_NAME}/${PROJECT_NAME}/
 RUN --mount=type=secret,uid=1000,id=github-credentials,required \
-		--mount=type=cache,uid=1000,target="/home/${USER_NAME}/.cache/bundle" <<-EOF
+		--mount=type=cache,uid=1000,target=/home/${USER_NAME}/.cache/bundle <<-EOF
 			set -aeu
 			. /run/secrets/github-credentials
 			GEM_HOME="/home/${USER_NAME}/.cache/bundle" bundle install

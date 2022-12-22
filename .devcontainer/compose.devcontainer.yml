@@ -2,8 +2,6 @@ services:
   api:
     volumes:
       - shell-log:/home/${API_USER_NAME}/shell_log
-      - yard-gem-index:/home/${API_USER_NAME}/.yard/gem_index
     command: bash -c "while sleep 1000; do :; done"
 volumes:
   shell-log:
-  yard-gem-index:

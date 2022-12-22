@@ -13,7 +13,7 @@ RUN <<-EOF
 	chown -R "${USER_NAME}" /etc/nginx
 	chown -R "${USER_NAME}" /var/cache/nginx
 EOF
-USER "${USER_NAME}"
+USER ${USER_NAME}
 
 EXPOSE 80
 
