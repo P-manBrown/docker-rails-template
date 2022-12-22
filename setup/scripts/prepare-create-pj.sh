@@ -18,13 +18,13 @@ fi
 # Set up Git/GitHub
 echo 'Setting up GitHub...'
 ## Enable to automatically delete head branches
-github_user="$(git config user.name)"
+github_user="$(git config --global --get user.name)"
 repo_name="$(basename -s .git "$(git remote get-url origin)")"
 gh repo edit "${github_user}/${repo_name}" --delete-branch-on-merge
 echo 'Setting up Git...'
 ## Enable to commit inside a container without 'Dev Containers'
 git config --local user.name "${github_user}"
-git config --local user.email "$(git config user.email)"
+git config --local user.email "$(git config --global --get user.email)"
 ## Reflect global ignore
 gitignore_global="${XDG_CONFIG_HOME:-${HOME}}/.config/git/ignore"
 if [[ ! -e "${gitignore_global}" ]]; then

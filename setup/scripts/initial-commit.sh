@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 err() {
@@ -19,12 +19,18 @@ fi
 
 rm -rf ./setup
 
-echo 'Updating remote refs...'
+echo 'Creating initial commit...'
+git update-ref -d HEAD
+git restore --staged .
+git rm --cached .
 git add .
-LEFTHOOK=0 git commit -m 'Initial commit'
-LEFTHOOK=0 git push -f origin main
-git switch -c develop
-LEFTHOOK=0 git push origin develop
+(
+	export LEFTHOOK=0
+	git commit -m 'Initial commit'
+	git push -f origin main
+	git switch -c develop
+	git push origin develop
+)
 
 project_name="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
 if [[ "${project_name}" =~ 'backend' ]]; then
