@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 err() {
@@ -92,8 +92,16 @@ while read -r added_gem_decl; do
 	else
 		sed -i "/group :development, :test do/i ${decl_no_group}\n" /tmp/Gemfile
 	fi
+	current_gem="$(echo "${decl_no_group}" | cut -d '"' -f 2)"
+	set +u
+	if [[ -n "${current_gem}" ]] \
+		&& [[ "${current_gem}" == "${previous_gem%%-*}"* ]]; then
+			sed -i "/${decl_no_group}/{n;d}" /tmp/Gemfile
+	fi
+	set -u
+	previous_gem="${current_gem}"
 done < <(echo "${added_gem_decls}")
-sed -r '/^(\s{2})?#/d;' /tmp/Gemfile | cat -s > ./Gemfile
+sed -r '/^(\s{2})?#/d' /tmp/Gemfile | cat -s > ./Gemfile
 printf '\x1b[1m%s\e[m\n' 'Check the contents of your Gemfile'
 ## installing gems via Gemfile
 bundle install
@@ -113,13 +121,6 @@ else
 	sed -i '/protect-branch:$/,/fail_text:.*branch\."$/d' ./lefthook.yml
 fi
 rm -rf "${CONFIG_DIR}"
-
-# adding gitignore patterns
-cat <<-EOF >> ./.git/info/exclude
-	/.vscode/settings.json
-	/html_from_md
-	.DS_Store
-EOF
 
 rm ./setup/scripts/create-pj.sh
 
