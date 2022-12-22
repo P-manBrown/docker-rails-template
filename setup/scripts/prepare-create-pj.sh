@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 err() {
@@ -15,18 +15,25 @@ if ! git branch | grep -q 'main'; then
 	exit 1
 fi
 
-# Setting up Git/GitHub
-git update-ref -d HEAD
+# Set up Git/GitHub
 echo 'Setting up GitHub...'
-## enable to automatically delete head branches
+## Enable to automatically delete head branches
 github_user="$(git config user.name)"
 repo_name="$(basename -s .git "$(git remote get-url origin)")"
 gh repo edit "${github_user}/${repo_name}" --delete-branch-on-merge
 echo 'Setting up Git...'
-## enable to commit inside a container without 'Dev Containers'
+## Enable to commit inside a container without 'Dev Containers'
 git config --local user.name "${github_user}"
 git config --local user.email "$(git config user.email)"
-# setting up 'commit message template'
+## Reflect global ignore
+gitignore_global="${XDG_CONFIG_HOME:-${HOME}}/.config/git/ignore"
+if [[ ! -e "${gitignore_global}" ]]; then
+	gitignore_global="$(git config --get core.excludesfile)"
+fi
+git_exclude="$(git rev-parse --git-path info/exclude)"
+cat "${gitignore_global}" >> "${git_exclude}"
+
+## Set up 'commit message template'
 git config --local commit.template ./.github/commit/gitmessage.txt
 
 # Reflect project name
@@ -36,10 +43,11 @@ if [[ -z "${project_name}" ]]; then
 	read -r project_name
 fi
 set -u
-echo "Reflecting your project name(${project_name})..."
-grep -lr 'myapp-backend' | xargs sed -i '' "s/myapp-backend/${project_name}/g"
+echo "Reflecting your project name (${project_name})..."
+grep -lr 'myapp-backend' . \
+	| LC_ALL=C xargs sed -i '' "s/myapp-backend/${project_name}/g"
 
-# Copying template files
+# Copy template files
 echo 'Copying template files...'
 cd ./Docker/api/environment
 cp ./github-credentials.env.template ./github-credentials.env
