@@ -18,7 +18,7 @@ fi
 # Set up Git/GitHub
 echo 'Setting up GitHub...'
 ## Enable to automatically delete head branches
-github_user="$(git config --global --get user.name)"
+github_user="$(git config --get user.name)"
 repo_name="$(basename -s .git "$(git remote get-url origin)")"
 gh repo edit "${github_user}/${repo_name}" --delete-branch-on-merge
 echo 'Setting up Git...'
@@ -35,7 +35,7 @@ if [[ -n "${gitignore_global}" ]]; then
 fi
 ## Enable to commit inside a container without 'Dev Containers'
 git config --local user.name "${github_user}"
-git config --local user.email "$(git config --global --get user.email)"
+git config --local user.email "$(git config --get user.email)"
 ## Set up 'commit message template'
 git config --local commit.template ./.github/commit/gitmessage.txt
 

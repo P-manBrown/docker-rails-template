@@ -36,7 +36,7 @@ if [[ "${project_name}" == *'backend'* ]]; then
 	git switch -c develop
 	LEFTHOOK=0 git push origin develop
 	echo 'Setting up protected branches...'
-	owner="$(git config user.name)"
+	owner="$(git config --get user.name)"
 	repo="$(basename -s .git "$(git remote get-url origin)")"
 	repositoryId="$(
 		gh api graphql \
