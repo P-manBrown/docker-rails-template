@@ -22,17 +22,20 @@ github_user="$(git config --global --get user.name)"
 repo_name="$(basename -s .git "$(git remote get-url origin)")"
 gh repo edit "${github_user}/${repo_name}" --delete-branch-on-merge
 echo 'Setting up Git...'
-## Enable to commit inside a container without 'Dev Containers'
-git config --local user.name "${github_user}"
-git config --local user.email "$(git config --global --get user.email)"
 ## Reflect global ignore
 gitignore_global="${XDG_CONFIG_HOME:-${HOME}}/.config/git/ignore"
 if [[ ! -e "${gitignore_global}" ]]; then
+	set +e
 	gitignore_global="$(git config --get core.excludesfile)"
+	set -e
 fi
-git_exclude="$(git rev-parse --git-path info/exclude)"
-cat "${gitignore_global}" >> "${git_exclude}"
-
+if [[ -n "${gitignore_global}" ]]; then
+	git_exclude="$(git rev-parse --git-path info/exclude)"
+	cat "${gitignore_global}" >> "${git_exclude}"
+fi
+## Enable to commit inside a container without 'Dev Containers'
+git config --local user.name "${github_user}"
+git config --local user.email "$(git config --global --get user.email)"
 ## Set up 'commit message template'
 git config --local commit.template ./.github/commit/gitmessage.txt
 
@@ -56,8 +59,8 @@ cp ./mysql.env.template ./mysql.env
 cd ../../../
 printf '\x1b[1m%s\e[m\n' 'Overwrite the following files!'
 cat <<-EOF
-Docker/api/environment/github-credentials.env
-Docker/db/environment/mysql.env
+	Docker/api/environment/github-credentials.env
+	Docker/db/environment/mysql.env
 EOF
 
 rm ./setup/scripts/prepare-create-pj.sh
