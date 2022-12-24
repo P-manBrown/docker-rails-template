@@ -31,7 +31,7 @@ Docker上のRails(MySQL・Nginx)環境を構築するためのテンプレート
 Lefthookをホストで使用するには別途ローカルにインストールする必要があります。  
 [【evilmartians/lefthook】Install lefthook](https://github.com/evilmartians/lefthook/blob/master/docs/install.md)を参考にインストールしてください。  
 
-DockerベースイメージおよびGemが更新可能な場合にDependabotにより更新のプルリクエストが発行されます。  
+DockerベースイメージおよびGemが更新可能な場合にDependabotによりプルリクエストが発行されます。  
 
 ### コミット
 
@@ -46,13 +46,13 @@ DockerベースイメージおよびGemが更新可能な場合にDependabotに�
 
 プロジェクト名に`backend`という文言を含めると以下の機能が有効になります。  
 
-- ブランチの作成
+- ブランチの作成  
   `develop`ブランチが作成されます。  
 - `main`と`develop`が保護ブランチになる  
   上記ブランチへ`marge`する際にプルリクエストに対し1件以上の承認が必要になります。  
   また新しいコミットが`push`されたときに古いプルリクエストの承認が却下されるようになります。
 - Lefthookの実行コマンド追加  
-  `lefthook.yml`の`protect-branch`が有効になります。  
+  [lefthook.yml](lefthook.yml)の`protect-branch`が有効になります。  
   （プロジェクト名に`backend`が含まれていない場合には`protect-branch`は削除されます。）  
 
 ## 使用方法
@@ -97,10 +97,7 @@ bash setup/scripts/prepare-create-pj.sh
 
 プロジェクトを作成するために以下の手順を実行します。  
 
-<details>
-  <summary>「Dev Containers」を使用する場合（クリックして展開）</summary>
-
-以下のファイルを書き換えます。
+まず以下のファイルを書き換えます。
 
 - `Docker/api/environment/github-credentials.env`
 - `Docker/db/environment/mysql.env`
@@ -110,6 +107,9 @@ bash setup/scripts/prepare-create-pj.sh
 - repo
 - read:packages
 - read:org
+
+<details>
+  <summary>「Dev Containers」を使用する場合（クリックして展開）</summary>
 
 書き換え後「Dev Containers」を起動します。  
 コマンドパレットで`Dev Containers: Reopen in Container`を実行します。  
@@ -123,11 +123,6 @@ bash setup/scripts/create-pj.sh
 
 <details>
   <summary>「Dev Containers」を使用しない場合（クリックして展開）</summary>
-
-以下のファイルを書き換えます。
-
-- `Docker/api/environment/github-credentials.env`
-- `Docker/db/environment/mysql.env`
 
 LefthookをDockerに対応させるため[lefthook-local.yml](setup/config/lefthook-local.yml)をプロジェクトルートに移動します。  
 
