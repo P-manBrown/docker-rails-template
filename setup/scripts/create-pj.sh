@@ -83,11 +83,11 @@ while read -r added_gem_decl; do
 		echo "${added_gem_decl}" \
 			| sed -r 's/, :groups? => \[?:.*t]?//; s/:require =>/require:/'
 	)"
-	if [[ "${added_gem_decl}" =~ ':development, :test' ]]; then
+	if [[ "${added_gem_decl}" == *':development, :test'* ]]; then
 		sed -i "/group :development, :test do/a \  ${decl_no_group}\n" /tmp/Gemfile
-	elif [[ "${added_gem_decl}" =~ ':development' ]]; then
+	elif [[ "${added_gem_decl}" == *':development'* ]]; then
 		sed -i "/group :development do/a \  ${decl_no_group}\n" /tmp/Gemfile
-	elif [[ "${added_gem_decl}" =~ ':test' ]]; then
+	elif [[ "${added_gem_decl}" == *':test'* ]]; then
 		sed -i "/group :test do/a \  ${decl_no_group}\n" /tmp/Gemfile
 	else
 		sed -i "/group :development, :test do/i ${decl_no_group}\n" /tmp/Gemfile
@@ -115,7 +115,7 @@ app_time_zone='config.time_zone = "Tokyo"'
 sed -i "s/# config.time_zone.*/${app_time_zone}/" ./config/application.rb
 mv -f "${CONFIG_DIR}/database.yml" ./config/database.yml
 mv -f "${CONFIG_DIR}/puma.rb" ./config/puma.rb
-if [[ "${PROJECT_NAME}" =~ 'backend' ]]; then
+if [[ "${PROJECT_NAME}" == *'backend'* ]]; then
 	sed -i 's/main/develop/' ./.github/dependabot.yml
 else
 	sed -i '/protect-branch:$/,/fail_text:.*branch\."$/d' ./lefthook.yml
