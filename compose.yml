@@ -16,7 +16,8 @@ services:
     restart: on-failure
     volumes:
       - mysql-datadir:/var/lib/mysql
-    env_file: *mysql-env-path
+    env_file:
+      - *mysql-env-path
     ports:
       - ${DB_PORT:-3306}:3306
   api:
