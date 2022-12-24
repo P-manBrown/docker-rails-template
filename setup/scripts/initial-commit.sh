@@ -28,12 +28,13 @@ git add .
 	export LEFTHOOK=0
 	git commit -m 'Initial commit'
 	git push -f origin main
-	git switch -c develop
-	git push origin develop
 )
 
 project_name="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
-if [[ "${project_name}" =~ 'backend' ]]; then
+if [[ "${project_name}" == *'backend'* ]]; then
+	echo 'Creating develop branch...'
+	git switch -c develop
+	LEFTHOOK=0 git push origin develop
 	echo 'Setting up protected branches...'
 	owner="$(git config user.name)"
 	repo="$(basename -s .git "$(git remote get-url origin)")"
