@@ -1,14 +1,24 @@
+common:
+  create-container: &create-container
+    create-container:
+      run: docker compose create api
+  docker-runer: &docker-runner
+    docker compose run --rm --no-deps api sh -c "{cmd}"
+
 pre-commit:
   commands:
+    <<: *create-container
     rubocop:
-      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+      run: *docker-runner
     markdownlint:
-      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+      run: *docker-runner
 commit-msg:
   commands:
+    <<: *create-container
     git-lint:
-      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+      run: *docker-runner
 pre-push:
   commands:
+    <<: *create-container
     rspec:
-      run: docker compose run --rm --no-deps api sh -c "{cmd}"
+      run: *docker-runner
