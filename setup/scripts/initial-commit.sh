@@ -5,12 +5,13 @@ err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
 }
 
-if [[ -e ./README.md ]]; then
+if [[ ! -e ./README.md ]]; then
 	err 'Create ./README.md before running this file.'
 	exit 1
 fi
 
 echo 'Running pre-commit...'
+git add .
 if [[ -e /.dockerenv ]]; then
 	LEFTHOOK_EXCLUDE=protect-branch bundle exec lefthook run pre-commit
 else
@@ -20,9 +21,9 @@ fi
 rm -rf ./setup
 
 echo 'Creating initial commit...'
-git update-ref -d HEAD
 git restore --staged .
-git rm --cached .
+git rm -r --cached .
+git update-ref -d HEAD
 git add .
 (
 	export LEFTHOOK=0
