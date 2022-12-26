@@ -19,6 +19,8 @@ rails new . --api --database=mysql --force --skip-test
 
 # adding file contents to the index
 echo 'Adding file contents to the index...'
+repo_root="$(git rev-parse --show-toplevel)"
+git config --global --add safe.directory "${repo_root}"
 git add .
 
 # installing gems
@@ -110,6 +112,34 @@ bundle install
 echo 'Setting up your project...'
 ## setting up RSpec
 rails generate rspec:install
+## setting up Lefthook
+bundle exec lefthook install
+post_create_command='.devcontainer/postCreateCommand.sh'
+set +u
+if [[ "${REMOTE_CONTAINERS}" == 'true' ]]; then
+	echo '' >> "${post_create_command}"
+	cat <<-EOF >> "${post_create_command}"
+		echo 'Setting up Lefthook...'
+		bundle exec lefthook install
+	EOF
+fi
+set -u
+## setting up Solargraph
+set +u
+if [[ "${REMOTE_CONTAINERS}" == 'true' ]]; then
+	for _ in {1..3}; do
+		yard gems -quiet && break
+	done
+	echo '' >> "${post_create_command}"
+	cat <<-EOF >> "${post_create_command}"
+		echo 'Setting up Solargraph...'
+		for _ in {1..3}; do
+			yard gems -quiet && break
+		done
+	EOF
+fi
+set -u
+sed -i 's/^yard gems/\tyard gems/' "${post_create_command}"
 ## preparing configuration files
 app_time_zone='config.time_zone = "Tokyo"'
 sed -i "s/# config.time_zone.*/${app_time_zone}/" ./config/application.rb

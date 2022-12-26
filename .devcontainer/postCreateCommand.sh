@@ -12,6 +12,7 @@ cat <<-'EOF' | tee -a "${HOME}/.bashrc" >> "${HOME}/.zshrc"
 	    done
 	  fi
 	}
+	export SHELL="$(readlink "/proc/$$/exe")"
 	export HISTFILE="${HOME}/shell_log/.${SHELL##*/}_history"
 	if [[ ${SHLVL} -eq 2 ]]; then
 	  mkdir -p "${HOME}/shell_log/${SHELL##*/}"
@@ -28,15 +29,11 @@ sed -i "s/^plugins=(.*)/plugins=${oh_my_plugins}/" "${HOME}/.zshrc"
 sudo chown -R "${USER}" "${HOME}/shell_log"
 
 echo 'Setting up Git...'
-git config --global core.editor 'code --wait'
+set +e
+repo_root="$(git rev-parse --show-toplevel)"
+set -e
+sudo git config --system --add safe.directory "${repo_root:-${PWD}}"
+git config --local core.editor 'code --wait'
 
 echo 'Setting up GitHub CLI...'
 gh config set editor 'code --wait'
-
-echo 'Setting up Lefthook...'
-bundle exec lefthook install
-
-echo 'Setting up Solargraph...'
-for _ in {1..3}; do
-	yard gems -quiet && break
-done
