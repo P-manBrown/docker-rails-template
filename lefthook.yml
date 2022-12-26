@@ -8,7 +8,7 @@ pre-commit:
       fail_text: 'Read the report above.'
     markdownlint:
       glob: '*.md'
-      run: bundle exec mdl --rules ~MD013 {staged_files}
+      run: bundle exec mdl {staged_files}
       fail_text: 'Read the report above.'
     protect-branch:
       run: git branch --show-current | tee /dev/tty | grep -Eqvx 'main|develop'

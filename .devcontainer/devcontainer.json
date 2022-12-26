@@ -39,6 +39,9 @@
         "solargraph.diagnostics": true,
         "solargraph.formatting": true,
         "markdown.extension.toc.levels": "2..6",
+        "markdownlint.config": {
+          "MD033": false
+        },
         "[markdown]": {
           "editor.defaultFormatter": "yzhang.markdown-all-in-one",
           "editor.formatOnSave": true,
