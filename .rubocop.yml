@@ -23,10 +23,17 @@ Layout/IndentationConsistency:
 Layout/LineLength:
   Max: 80
 
+Metrics/BlockLength:
+  Exclude:
+    - "Guardfile"
+
 Style/AsciiComments:
   Enabled: false
 
 Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/RedundantReturn:
