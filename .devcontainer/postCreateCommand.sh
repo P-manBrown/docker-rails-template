@@ -12,7 +12,7 @@ cat <<-'EOF' | tee -a "${HOME}/.bashrc" >> "${HOME}/.zshrc"
 	    done
 	  fi
 	}
-	export SHELL="$(readlink "/proc/$$/exe")"
+	SHELL="$(readlink "/proc/$$/exe")"
 	export HISTFILE="${HOME}/shell_log/.${SHELL##*/}_history"
 	if [[ ${SHLVL} -eq 2 ]]; then
 	  mkdir -p "${HOME}/shell_log/${SHELL##*/}"

@@ -10,6 +10,11 @@ if [[ -e /.dockerenv ]]; then
 	exit 1
 fi
 
+if ! ps -p "$$" | grep -q 'bash'; then
+	err 'This file must be run with Bash.'
+	exit 1
+fi
+
 if ! git branch | grep -q 'main'; then
 	err "Change the default branch to 'main'."
 	exit 1

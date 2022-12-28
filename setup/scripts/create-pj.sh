@@ -10,6 +10,11 @@ if [[ ! -e /.dockerenv ]]; then
 	exit 1
 fi
 
+if ! ps -p "$$" | grep -q 'bash'; then
+	err 'This file must be run with Bash.'
+	exit 1
+fi
+
 CONFIG_DIR='./setup/config'
 PROJECT_NAME="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
 
