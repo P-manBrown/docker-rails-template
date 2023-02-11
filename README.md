@@ -29,14 +29,14 @@ Docker上のRails(MySQL・Nginx)環境を構築するためのテンプレート
 - Solargraph（devcontainer内のみ）
 
 Lefthookをホストで使用するには別途ローカルにインストールする必要があります。  
-[【evilmartians/lefthook】Install lefthook](https://github.com/evilmartians/lefthook/blob/master/docs/install.md)を参考にインストールしてください。  
+[【evilmartians/lefthook】Install lefthook](https://tinyurl.com/yc7mhabe)を参考にインストールしてください。  
 
 DockerベースイメージおよびGemが更新可能な場合にDependabotによりプルリクエストが発行されます。  
 
 ### コミット
 
-コミットメッセージは[COMMIT_CONVENTION.md](.github/commit/COMMIT_CONVENTION.md)に基づいて作成します。  
-これを容易にするため[gitmessage.txt](.github/commit/gitmessage.txt)をコミットメッセージのテンプレートとして使用します。  
+コミットメッセージは[COMMIT_CONVENTION.md](https://tinyurl.com/git-commit-convention)に基づいて作成します。  
+これを容易にするため[.gitmessage](https://tinyurl.com/gitmessage)をコミットメッセージのテンプレートとして使用します。  
 
 ### ブランチ
 
@@ -65,23 +65,9 @@ gh repo create <新規リポジトリ名> --public --template P-manBrown/docker-
 
 次のコマンドを実行して作成したリポジトリをローカルにクローンします。  
 
-<details>
-  <summary>gitコマンドの場合（クリックして展開）</summary>
-
 ```terminal
-git clone <URL or SSH key>
+git clone --recurse-submodules <リポジトリ URL or SSH key>
 ```
-
-</details>
-
-<details>
-  <summary>ghコマンドの場合（クリックして展開）</summary>
-
-```terminal
-gh repo clone <GitHubユーザー名>/<新規リポジトリ名>
-```
-
-</details>
 
 プロジェクトルートに移動します。  
 

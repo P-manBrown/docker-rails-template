@@ -42,7 +42,7 @@ fi
 git config --local user.name "${github_user}"
 git config --local user.email "$(git config --get user.email)"
 ## Set up 'commit message template'
-git config --local commit.template ./.github/commit/gitmessage.txt
+git config --local commit.template ./.github/COMMIT_CONVENTION/.gitmessage
 
 # Reflect project name
 set +u
