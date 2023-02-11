@@ -15,9 +15,6 @@
       "skipYardGems": true
     }
   },
-  "overrideFeatureInstallOrder": [
-    "ghcr.io/devcontainers/features/common-utils"
-  ],
   "customizations": {
     "vscode": {
       "extensions": [
