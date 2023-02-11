@@ -1,7 +1,7 @@
 x-mysql_env_path: &mysql-env-path
   ./Docker/db/environment/mysql.env
-x-puma_socket_volume: &puma-socket-volume
-  puma-socket:/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}/tmp/sockets
+x-puma_socket_volume: &puma-sockets-volume
+  puma-sockets:/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}/tmp/sockets
 x-github_credentials_path: &github-credentials-path
   ./Docker/api/environment/github-credentials.env
 
@@ -33,7 +33,7 @@ services:
     volumes:
       - .:/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}
       - gem-home:/usr/local/bundle
-      - *puma-socket-volume
+      - *puma-sockets-volume
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
       - XDG_CONFIG_DIRS=/home/${API_USER_NAME}/${COMPOSE_PROJECT_NAME}
@@ -50,7 +50,8 @@ services:
       context: ./Docker/web
     restart: on-failure
     volumes:
-      - *puma-socket-volume
+      - *puma-sockets-volume
+      - nginx-logdir:/var/log/nginx
     ports:
       - ${WEB_PORT:-80}:80
     depends_on:
@@ -61,4 +62,5 @@ secrets:
 volumes:
   mysql-datadir:
   gem-home:
-  puma-socket:
+  puma-sockets:
+  nginx-logdir:
