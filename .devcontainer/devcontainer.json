@@ -45,7 +45,11 @@
           "editor.codeActionsOnSave": {
             "source.fixAll.markdownlint": true
           }
-        }
+        },
+        "thunder-client.httpLibrary": "axios",
+        "thunder-client.saveToWorkspace": true,
+        "thunder-client.workspaceRelativePath": "./.vscode",
+        "thunder-client.defaultUrl": "{{BASE_URL}}/v1/"
       }
     }
   }

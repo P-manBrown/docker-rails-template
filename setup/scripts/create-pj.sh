@@ -148,6 +148,8 @@ sed -i 's/^yard gems/\tyard gems/' "${post_create_command}"
 ## preparing configuration files
 app_time_zone='config.time_zone = "Tokyo"'
 sed -i "s/# config.time_zone.*/${app_time_zone}/" ./config/application.rb
+permitting_host='config.hosts << "host.docker.internal"'
+sed -i "/^end$/i \  ${permitting_host}" ./config/environments/development.rb
 mv -f "${CONFIG_DIR}/database.yml" ./config/database.yml
 mv -f "${CONFIG_DIR}/puma.rb" ./config/puma.rb
 if [[ "${PROJECT_NAME}" == *'backend'* ]]; then

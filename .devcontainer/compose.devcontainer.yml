@@ -2,6 +2,12 @@ services:
   api:
     volumes:
       - shell-log:/home/${API_USER_NAME}/shell_log
+      - th-client-storage:/home/${API_USER_NAME}/.vscode-server/data/User/globalStorage/rangav.vscode-thunder-client
+    entrypoint:
+      - bash
+      - ./.devcontainer/devcontainer-entrypoint.sh
+      - entrypoint.sh
     command: bash -c "while sleep 1000; do :; done"
 volumes:
   shell-log:
+  th-client-storage:
