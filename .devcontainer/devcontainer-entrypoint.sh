@@ -2,7 +2,7 @@
 
 set -eu
 
-USER="$(whoami)"
-sudo chown -R "${USER}" "/home/${USER}/.vscode-server"
+user="$(whoami)"
+sudo chown -R "${user}" "/home/${user}/.vscode-server"
 
 exec "$@"
