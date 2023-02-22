@@ -3,10 +3,7 @@ FROM ruby:3.2.1
 
 ARG PROJECT_NAME
 ARG USER_NAME
-ENV TZ='Asia/Tokyo'
-
-COPY --chmod=755 ./Docker/api/entrypoint.sh /usr/bin/
-ENTRYPOINT ["entrypoint.sh"]
+ENV TZ=Asia/Tokyo
 
 RUN <<-EOF
 	set -eu
@@ -27,6 +24,4 @@ EOF
 
 RUN mkdir -p "/home/${USER_NAME}/${PROJECT_NAME}/tmp/sockets"
 
-EXPOSE 3000
-
-CMD ["bundle", "exec", "pumactl", "start"]
+CMD ["bin/bundle", "exec", "puma", "-C", "./config/puma.rb"]
