@@ -5,7 +5,7 @@ echo 'Setting up Shell...'
 cat <<-'EOF' | tee -a "${HOME}/.bashrc" >> "${HOME}/.zshrc"
 	precmd() {
 	  last_cmd="$(history | tail -1 | sed -r 's/\s+[0-9]+\s+//')"
-	  if [[ "${last_cmd}" =~ ^bundle(\s+((install|-+).*$)|$) ]]; then
+	  if [[ "${last_cmd}" =~ ^(bin/)?bundle(\\s+((install|-+).*$)|$) ]]; then
 	    echo 'Running `yard gems` to generate docs for gems...'
 	    for _ in {1..3}; do
 	      yard gems -quiet && break
@@ -37,3 +37,7 @@ git config --local core.editor 'code --wait'
 
 echo 'Setting up GitHub CLI...'
 gh config set editor 'code --wait'
+
+echo 'Setting up Thunder Client...'
+vscode_global_storage="${HOME}/.vscode-server/data/User/globalStorage"
+mkdir -p "${vscode_global_storage}/rangav.vscode-thunder-client"

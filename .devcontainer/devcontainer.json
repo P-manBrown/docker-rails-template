@@ -5,7 +5,7 @@
   "workspaceFolder": "/home/ruby/myapp-backend",
   "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:1": {
+    "ghcr.io/P-manBrown/devcontainer-features/common-utils:2": {
       "configureZshAsDefaultShell": true,
       "upgradePackages": false
     },
@@ -20,14 +20,15 @@
       "extensions": [
         "EditorConfig.EditorConfig",
         "VisualStudioExptTeam.vscodeintellicode",
-        "castwide.solargraph",
         "yzhang.markdown-all-in-one",
         "DavidAnson.vscode-markdownlint",
         "bierner.markdown-preview-github-styles",
+        "castwide.solargraph",
         "noku.rails-run-spec-vscode",
         "sporto.rails-go-to-spec",
         "KoichiSasada.vscode-rdbg",
-        "rangav.vscode-thunder-client"
+        "rangav.vscode-thunder-client",
+        "cweijan.vscode-mysql-client2"
       ],
       "settings": {
         "editor.defaultFormatter": "castwide.solargraph",
@@ -49,7 +50,7 @@
         "thunder-client.httpLibrary": "axios",
         "thunder-client.saveToWorkspace": true,
         "thunder-client.workspaceRelativePath": "./.vscode",
-        "thunder-client.defaultUrl": "{{BASE_URL}}/v1/"
+        "thunder-client.defaultUrl": "{{BASE_URL}}/{{API_VERSION}}/"
       }
     }
   }

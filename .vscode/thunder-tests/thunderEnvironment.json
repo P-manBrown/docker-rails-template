@@ -10,7 +10,11 @@
     "data": [
       {
         "name": "BASE_URL",
-        "value": "http://host.docker.internal/api"
+        "value": "http://host.docker.internal:8080/api"
+      },
+      {
+        "name": "API_VERSION",
+        "value": "v1"
       }
     ],
     "envFile": "../../.env"
