@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM mysql:8.0.32
 
-ENV TZ='Asia/Tokyo'
+ENV TZ=Asia/Tokyo
 
 COPY <<-EOF /etc/mysql/conf.d/charset.cnf
 	[mysqld]
@@ -13,5 +13,3 @@ COPY --chmod=755 ./initdb.d/. /docker-entrypoint-initdb.d/
 USER mysql
 
 EXPOSE 3306
-
-CMD ["mysqld"]
