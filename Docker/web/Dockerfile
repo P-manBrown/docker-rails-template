@@ -6,15 +6,13 @@ ENV TZ='Asia/Tokyo'
 
 RUN rm -f /etc/nginx/conf.d/*
 COPY ./nginx/nginx.conf /etc/nginx/
-COPY ./nginx/conf.d/myapp.conf /etc/nginx/conf.d/
+COPY ./nginx/conf.d/. /etc/nginx/templates/
 
 RUN <<-EOF
-	set -e
+	set -eu
 	chown -R "${USER_NAME}" /etc/nginx
 	chown -R "${USER_NAME}" /var/cache/nginx
 EOF
 USER ${USER_NAME}
 
-EXPOSE 80
-
-CMD ["/usr/sbin/nginx", "-g", "daemon off;", "-c", "/etc/nginx/nginx.conf"]
+EXPOSE 8080
