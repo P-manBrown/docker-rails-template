@@ -4,11 +4,11 @@ pre-commit:
   commands:
     rubocop:
       glob: '*.rb'
-      run: bundle exec rubocop -A --force-exclusion {staged_files}
+      run: bin/bundle exec rubocop -A --force-exclusion {staged_files}
       fail_text: 'Read the report above.'
     markdownlint:
       glob: '*.md'
-      run: bundle exec mdl {staged_files}
+      run: bin/bundle exec mdl {staged_files}
       fail_text: 'Read the report above.'
     protect-branch:
       run: git branch --show-current | tee /dev/tty | grep -Eqvx 'main|develop'
@@ -16,7 +16,7 @@ pre-commit:
 commit-msg:
   commands:
     git-lint:
-      run: bundle exec git-lint --hook {1}
+      run: bin/bundle exec git-lint --hook {1}
       fail_text: 'Read the report above and .github/commit/COMMIT_CONVENTION.md'
 pre-push:
   commands:
@@ -25,5 +25,5 @@ pre-push:
       glob: 'spec/**/*.rb'
       env:
         RAILS_ENV: test
-      run: bundle exec rspec {files}
+      run: bin/bundle exec rspec {files}
       fail_text: 'Read the report above.'
