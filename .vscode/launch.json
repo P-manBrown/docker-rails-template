@@ -2,19 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "rdbg",
-      "name": "Debug current file with rdbg",
-      "request": "launch",
-      "script": "${file}",
-      "askParameters": false
-    },
-    {
-      "name": "Start Puma",
+      "name": "Rails: start debugging",
       "type": "rdbg",
       "request": "launch",
-      "command": "",
       "script": "${workspaceFolder}/bin/bundle",
-      "args": ["exec", "pumactl", "start"]
+      "args": ["exec", "puma", "-C", "./config/puma.rb"],
+      "useTerminal": true
     }
   ]
 }
