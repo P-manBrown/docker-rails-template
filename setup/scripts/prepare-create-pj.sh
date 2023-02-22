@@ -20,6 +20,13 @@ if ! git branch | grep -q 'main'; then
 	exit 1
 fi
 
+set +u
+if [[ -z "${PROJECT_NAME}" ]]; then
+	echo -n 'What is your project named? > '
+	read -r PROJECT_NAME
+fi
+set -u
+
 # Set up Git/GitHub
 echo 'Setting up GitHub...'
 ## Enable to automatically delete head branches
@@ -45,15 +52,18 @@ git config --local user.email "$(git config --get user.email)"
 git config --local commit.template ./.github/COMMIT_CONVENTION/.gitmessage
 
 # Reflect project name
-set +u
-if [[ -z "${project_name}" ]]; then
-	echo -n 'What is your project named? > '
-	read -r project_name
-fi
-set -u
-echo "Reflecting your project name (${project_name})..."
+echo "Reflecting your project name (${PROJECT_NAME})..."
 grep -lr 'myapp-backend' . \
-	| LC_ALL=C xargs sed -i '' "s/myapp-backend/${project_name}/g"
+	| LC_ALL=C xargs sed -i '' "s/myapp-backend/${PROJECT_NAME}/g"
+
+# Edit configuration files
+echo 'Editing configuration files...'
+if [[ "${PROJECT_NAME}" == *'backend'* ]]; then
+	sed -i '' 's/main/develop/' ./.github/dependabot.yml
+else
+	sed -i '' '/protect-branch:$/,/fail_text:.*branch\."$/d' ./lefthook.yml
+	sed -i '' '/extra_hosts:$/,/.*:host-gateway$/d' ./compose.yml
+fi
 
 # Copy template files
 echo 'Copying template files...'
@@ -64,8 +74,8 @@ cp ./mysql.env.template ./mysql.env
 cd ../../../
 printf '\x1b[1m%s\e[m\n' 'Overwrite the following files!'
 cat <<-EOF
-	Docker/api/environment/github-credentials.env
-	Docker/db/environment/mysql.env
+	./Docker/api/environment/github-credentials.env
+	./Docker/db/environment/mysql.env
 EOF
 
 rm ./setup/scripts/prepare-create-pj.sh

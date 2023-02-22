@@ -50,7 +50,10 @@ DockerベースイメージおよびGemが更新可能な場合にDependabotに�
   `develop`ブランチが作成されます。  
 - `main`と`develop`が保護ブランチになる  
   上記ブランチへ`marge`する際にプルリクエストに対し1件以上の承認が必要になります。  
-  また新しいコミットが`push`されたときに古いプルリクエストの承認が却下されるようになります。
+  また新しいコミットが`push`されたときに古いプルリクエストの承認が却下されるようになります。  
+- `host.docker.internal`に関する設定追加  
+  [compose.yml](compose.yml)の`extra_hosts`の設定が追加されます。  
+  （プロジェクト名に`backend`が含まれていない場合には`extra_hosts`は削除されます。）  
 - Lefthookの実行コマンド追加  
   [lefthook.yml](lefthook.yml)の`protect-branch`が有効になります。  
   （プロジェクト名に`backend`が含まれていない場合には`protect-branch`は削除されます。）  

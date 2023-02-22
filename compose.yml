@@ -36,8 +36,8 @@ services:
     env_file:
       - *mysql-env-path
       - *github-credentials-path
-    ports:
-      - ${API_PORT:-3001}:3000
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       db:
         condition: service_healthy
