@@ -46,7 +46,6 @@ services:
       context: ./Docker/web
     volumes:
       - puma-sockets:/${COMPOSE_PROJECT_NAME}/tmp
-      - nginx-logdir:/var/log/nginx
     environment:
       - PROJECT_NAME=${COMPOSE_PROJECT_NAME:?}
     ports:
@@ -60,4 +59,3 @@ volumes:
   mysql-datadir:
   gem-home:
   puma-sockets:
-  nginx-logdir:
