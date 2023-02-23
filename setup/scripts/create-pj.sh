@@ -116,6 +116,7 @@ bin/bundle install
 echo 'Setting up your project...'
 ## setting up RSpec
 rails generate rspec:install
+echo '--format documentation' >> ./.rspec
 ## setting up Lefthook
 bin/bundle exec lefthook install
 post_create_command='.devcontainer/postCreateCommand.sh'
