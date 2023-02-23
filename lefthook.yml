@@ -1,4 +1,4 @@
-min_version: 1.1.3
+min_version: 1.3.0
 pre-commit:
   parallel: true
   commands:
@@ -21,9 +21,8 @@ commit-msg:
 pre-push:
   commands:
     rspec:
-      files: git diff --name-only HEAD @{push} || git diff --name-only HEAD main
       glob: 'spec/**/*.rb'
       env:
         RAILS_ENV: test
-      run: bin/bundle exec rspec {files}
+      run: bin/bundle exec rspec {push_files}
       fail_text: 'Read the report above.'
