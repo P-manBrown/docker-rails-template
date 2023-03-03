@@ -29,8 +29,7 @@ git add .
 
 # installing gems
 echo 'Installing gems...'
-cp ./Gemfile /tmp/Gemfile
-trap "rm /tmp/Gemfile" EXIT
+cp -f ./Gemfile /tmp/Gemfile
 ## dotenv
 bin/bundle add dotenv-rails \
 	--group 'development, test' \
@@ -144,12 +143,18 @@ if [[ "${REMOTE_CONTAINERS}" == 'true' ]]; then
 	EOF
 fi
 set -u
-sed -i 's/^yard gems/\tyard gems/' "${post_create_command}"
+cp -f "${post_create_command}" /tmp/postCreateCommand.sh
+sed -i 's/^yard gems/\tyard gems/' /tmp/postCreateCommand.sh
+cp -f /tmp/postCreateCommand.sh "${post_create_command}"
 ## preparing configuration files
 app_time_zone='config.time_zone = "Tokyo"'
-sed -i "s/# config.time_zone.*/${app_time_zone}/" ./config/application.rb
+cp -f ./config/application.rb /tmp/application.rb
+sed -i "s/# config.time_zone.*/${app_time_zone}/" /tmp/application.rb
+cp -f /tmp/application.rb ./config/application.rb
 permitted_host='config.hosts << "host.docker.internal"'
-sed -i "/^end$/i \\\n  ${permitted_host}" ./config/environments/development.rb
+cp -f ./config/environments/development.rb /tmp/development.rb
+sed -i "/^end$/i \\\n  ${permitted_host}" /tmp/development.rb
+cp -f /tmp/development.rb ./config/environments/development.rb
 mv -f "${CONFIG_DIR}/database.yml" ./config/database.yml
 mv -f "${CONFIG_DIR}/puma.rb" ./config/puma.rb
 
