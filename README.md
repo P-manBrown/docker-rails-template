@@ -101,7 +101,7 @@ bash setup/scripts/prepare-create-pj.sh
   <summary>「Dev Containers」を使用する場合（クリックして展開）</summary>
 
 書き換え後「Dev Containers」を起動します。  
-コマンドパレットで`Dev Containers: Reopen in Container`を実行します。  
+VSCodeのコマンドパレットで`Dev Containers: Reopen in Container`を実行します。  
 起動完了後コンテナ内で次のコマンドを実行してRailsアプリケーションを作成します。  
 
 ```terminal
@@ -117,6 +117,12 @@ LefthookをDockerに対応させるため[lefthook-local.yml](setup/config/lefth
 
 ```terminal
 mv setup/config/lefthook-local.yml ./
+```
+
+不要であれば[.devcontainer](.devcontainer)と[.vscode](.vscode)を削除します。
+
+```terminal
+rm -rf ./.devcontainer ./.vscode
 ```
 
 次のコマンドを実行してRailsアプリケーションを作成します。  
