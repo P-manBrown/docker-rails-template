@@ -115,6 +115,12 @@ bin/bundle install
 
 # setting up project
 echo 'Setting up your project...'
+## adding files to be ignored by Git
+echo '' >> ./.gitignore
+cat <<-EOF >> ./.gitignore
+	# Ignore local env files.
+	.env*.local
+EOF
 ## setting up RSpec
 rails generate rspec:install
 echo '--format documentation' >> ./.rspec
