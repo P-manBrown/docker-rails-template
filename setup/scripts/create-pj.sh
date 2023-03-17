@@ -59,9 +59,11 @@ bin/bundle add mdl \
 ## Rack CORS Middleware
 bin/bundle add rack-cors \
 	--skip-install
+## Rails i18n
+bin/bundle add rails-i18n \
+	--skip-install
 ## RSpec
 bin/bundle add rspec-rails \
-	--version '~> 6.0.0' \
 	--group 'development, test' \
 	--skip-install
 ## Rubocop
@@ -148,8 +150,10 @@ sed -i 's/^yard gems/\tyard gems/' /tmp/postCreateCommand.sh
 cp -f /tmp/postCreateCommand.sh "${post_create_command}"
 ## preparing configuration files
 app_time_zone='config.time_zone = "Tokyo"'
+app_default_locale='config.i18n.default_locale = :ja'
 cp -f ./config/application.rb /tmp/application.rb
 sed -i "s/# config.time_zone.*/${app_time_zone}/" /tmp/application.rb
+sed -i "/^end$/i \\\n  ${app_default_locale}" /tmp/application.rb
 cp -f /tmp/application.rb ./config/application.rb
 permitted_host='config.hosts << "host.docker.internal"'
 cp -f ./config/environments/development.rb /tmp/development.rb
