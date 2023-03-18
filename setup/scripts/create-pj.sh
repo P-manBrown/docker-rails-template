@@ -155,11 +155,14 @@ cp -f "${post_create_command}" /tmp/postCreateCommand.sh
 sed -i 's/^yard gems/\tyard gems/' /tmp/postCreateCommand.sh
 cp -f /tmp/postCreateCommand.sh "${post_create_command}"
 ## preparing configuration files
-app_time_zone='config.time_zone = "Tokyo"'
-app_default_locale='config.i18n.default_locale = :ja'
+rails_time_zone='config.time_zone = "Tokyo"'
+active_record_timezone='config.active_record.default_timezone = :local'
+rails_default_locale='config.i18n.default_locale = :ja'
 cp -f ./config/application.rb /tmp/application.rb
-sed -i "s/# config.time_zone.*/${app_time_zone}/" /tmp/application.rb
-sed -i "/^end$/i \\\n  ${app_default_locale}" /tmp/application.rb
+sed -i "s/# config.time_zone.*/${rails_time_zone}/" /tmp/application.rb
+sed -i \
+  "/config.time_zone.*/a \    ${active_record_timezone}" /tmp/application.rb
+sed -i "/^end$/i \\\n  ${rails_default_locale}" /tmp/application.rb
 cp -f /tmp/application.rb ./config/application.rb
 permitted_host='config.hosts << "host.docker.internal"'
 cp -f ./config/environments/development.rb /tmp/development.rb
