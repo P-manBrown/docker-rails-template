@@ -124,6 +124,19 @@ EOF
 ## setting up RSpec
 rails generate rspec:install
 echo '--format documentation' >> ./.rspec
+cp -f ./spec/rails_helper.rb /tmp/rails_helper.rb
+sed -i "s/ENV\['RAILS_ENV'\] ||=/ENV['RAILS_ENV'] =/" /tmp/rails_helper.rb
+cp -f /tmp/rails_helper.rb ./spec/rails_helper.rb
+### setting up Factory Bot
+mkdir -p ./spec/support
+cat <<-EOF > ./spec/support/factory_bot.rb
+	RSpec.configure do |config|
+	  config.include FactoryBot::Syntax::Methods
+	end
+EOF
+cp -f ./spec/rails_helper.rb /tmp/rails_helper.rb
+sed -i "s/# Dir\[Rails.root.join/Dir[Rails.root.join/" /tmp/rails_helper.rb
+cp -f /tmp/rails_helper.rb ./spec/rails_helper.rb
 ## setting up Lefthook
 bin/bundle exec lefthook install
 post_create_command='.devcontainer/postCreateCommand.sh'
