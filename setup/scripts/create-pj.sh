@@ -34,6 +34,10 @@ cp -f ./Gemfile /tmp/Gemfile
 bin/bundle add dotenv-rails \
 	--group 'development, test' \
 	--skip-install
+## Faker
+bin/bundle add faker \
+	--group 'development, test' \
+	--skip-install
 ## fuctory_bot
 bin/bundle add factory_bot_rails \
 	--group 'development, test' \

@@ -18,6 +18,7 @@ Docker上のRails(MySQL・Nginx)環境を構築するためのテンプレート
 プロジェクト作成時より以下のGemが使用できます。  
 
 - dotenv
+- Faker
 - factory_bot
 - Guard
 - Lefthook
