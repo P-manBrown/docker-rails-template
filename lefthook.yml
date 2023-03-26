@@ -14,6 +14,7 @@ pre-commit:
       run: git branch --show-current | tee /dev/tty | grep -Eqvx 'main|develop'
       fail_text: "ERROR: Do NOT commit directly to 'main' or 'develop' branch."
 commit-msg:
+  skip: merge
   commands:
     git-lint:
       run: bin/bundle exec git-lint --hook {1}
