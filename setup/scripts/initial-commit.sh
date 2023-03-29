@@ -41,6 +41,13 @@ git add .
 	git push -f origin main
 )
 
+echo 'Setting up Dependabot secrets...'
+GITHUB_TOKEN="$(
+	grep 'GH_TOKEN=' ./Docker/api/environment/github-credentials.env \
+		| cut -d '=' -f 2
+)"
+gh secret set MY_GITHUB_TOKEN -a dependabot -b "${GITHUB_TOKEN}"
+
 project_name="$(grep 'COMPOSE_PROJECT_NAME' ./.env | cut -d '=' -f 2)"
 if [[ "${project_name}" == *'backend'* ]]; then
 	echo 'Creating develop branch...'
@@ -72,7 +79,7 @@ if [[ "${project_name}" == *'backend'* ]]; then
 			-f branch="${branch}" \
 			-F requiredReviews=0
 	done
-	echo "Changing default branch to 'develop'"
+	echo "Changing default branch to develop..."
 	gh repo edit "${owner}"/"${repo}" --default-branch develop
 fi
 
