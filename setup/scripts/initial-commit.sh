@@ -60,13 +60,12 @@ if [[ "${project_name}" == *'backend'* ]]; then
 						pattern: $branch
 						requiresApprovingReviews: true
 						requiredApprovingReviewCount: $requiredReviews
-						dismissesStaleReviews: true
 						isAdminEnforced: true
 					}) { clientMutationId }
 				}' \
 			-f repositoryId="${repositoryId}" \
 			-f branch="${branch}" \
-			-F requiredReviews=1
+			-F requiredReviews=0
 	done
 fi
 
