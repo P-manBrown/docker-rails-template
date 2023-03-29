@@ -5,6 +5,11 @@ err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
 }
 
+if [[ -e /.dockerenv ]] || [[ "${REMOTE_CONTAINERS}" == "true" ]]; then
+	err 'This file must be run on the host or in the devcontainer.'
+	exit 1
+fi
+
 if ! ps -p "$$" | grep -q 'bash'; then
 	err 'This file must be run with Bash.'
 	exit 1
@@ -67,6 +72,8 @@ if [[ "${project_name}" == *'backend'* ]]; then
 			-f branch="${branch}" \
 			-F requiredReviews=0
 	done
+	echo "Changing default branch to 'develop'"
+	gh repo edit "${owner}"/"${repo}" --default-branch develop
 fi
 
 echo 'Done!!'
