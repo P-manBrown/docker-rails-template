@@ -29,7 +29,7 @@ updates:
     target-branch: 'main'
   - package-ecosystem: 'bundler'
     registries:
-    - github-packages
+      - github-packages
     directory: '/'
     schedule:
       interval: 'daily'

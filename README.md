@@ -49,6 +49,8 @@ DockerベースイメージおよびGemが更新可能な場合にDependabotに�
 
 - ブランチの作成  
   `develop`ブランチが作成されます。  
+- デフォルトブランチの変更
+  デフォルトブランチが`develop`に変更されます。  
 - `main`と`develop`が保護ブランチになる  
   上記ブランチへ`marge`する際にプルリクエストに対し1件以上の承認が必要になります。  
   また新しいコミットが`push`されたときに古いプルリクエストの承認が却下されるようになります。  
@@ -136,7 +138,7 @@ docker compose run --rm --no-deps api bash setup/scripts/create-pj.sh
 
 次に`README.md`を作成します。  
 
-作成後に次のコマンドを実行して「Initial commit」を再作成します。  
+作成後にホスト上またはDevcontainer内で次のコマンドを実行して「Initial commit」を再作成します。  
 
 ```terminal
 bash setup/scripts/initial-commit.sh
