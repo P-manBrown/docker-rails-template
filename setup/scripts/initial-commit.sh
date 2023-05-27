@@ -5,7 +5,7 @@ err() {
 	printf '\e[31m%s\n\e[m' "ERROR: $*" >&2
 }
 
-if [[ -e /.dockerenv ]] || [[ "${REMOTE_CONTAINERS}" == "true" ]]; then
+if [[ -e /.dockerenv ]] || [[ "${REMOTE_CONTAINERS}" != "true" ]]; then
 	err 'This file must be run on the host or in the devcontainer.'
 	exit 1
 fi
